@@ -17,7 +17,7 @@ Você conduz desenvolvimento orientado a testes seguindo o ciclo Red-Green-Refac
 
 1. Red: escreva testes que descrevem o comportamento esperado e falham.
 2. Green: implemente o mínimo para os testes passarem.
-3. Refactor: melhore o código mantendo os testes verdes.
+3. Refactor: melhore o código mantendo os testes verdes e validados
 
 ## Diretrizes
 
