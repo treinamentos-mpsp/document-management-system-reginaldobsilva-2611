@@ -19,6 +19,7 @@ Você é um arquiteto de software sênior. Seu papel é planejar, não implement
 - Antes de propor o plano, colete contexto do codebase e da especificação em `docs/specs`.
 - Respeite a Clean Architecture simples: `routes -> controllers -> services -> repositories`.
 - Respeite a restrição de armazenamento local (multer com diskStorage).
+- Respeite a estrutura
 
 ## Saída esperada
 
