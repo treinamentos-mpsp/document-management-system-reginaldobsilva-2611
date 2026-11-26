@@ -23,6 +23,12 @@ test('upload, listagem e download respeitam os contratos e o dono', async (conte
   assert.equal(missing.status, 400);
   assert.equal((await missing.json()).error.code, 'MISSING_FILE');
 
+  const unexpectedForm = new FormData();
+  unexpectedForm.append('unexpected', new Blob(['ok']), 'teste.txt');
+  const unexpected = await fetch(`${baseUrl}/upload`, { method: 'POST', body: unexpectedForm });
+  assert.equal(unexpected.status, 400);
+  assert.equal((await unexpected.json()).error.code, 'INVALID_UPLOAD');
+
   const invalid = await fetch(`${baseUrl}/upload`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{',
   });
@@ -52,6 +58,7 @@ test('upload, listagem e download respeitam os contratos e o dono', async (conte
   assert.match(storedFiles[0], /^[0-9a-f-]{36}$/);
 
   const list = await fetch(`${baseUrl}/documents`, { headers: { 'X-User-Id': 'usuario-1' } });
+  assert.equal(list.status, 200);
   assert.deepEqual(await list.json(), [document]);
   const otherList = await fetch(`${baseUrl}/documents`, { headers: { 'X-User-Id': 'usuario-2' } });
   assert.deepEqual(await otherList.json(), []);
@@ -86,4 +93,7 @@ test('upload, listagem e download respeitam os contratos e o dono', async (conte
   assert.equal(anonymousDocument.originalName, 'ação.txt');
   const anonymousDocuments = await fetch(`${baseUrl}/documents`);
   assert.deepEqual(await anonymousDocuments.json(), [anonymousDocument]);
+  const anonymousDownload = await fetch(`${baseUrl}/documents/${anonymousDocument.id}/download`);
+  assert.equal(anonymousDownload.status, 200);
+  assert.equal(await anonymousDownload.text(), 'ok');
 });
