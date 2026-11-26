@@ -9,12 +9,15 @@ test('upload, listagem e download respeitam os contratos e o dono', async (conte
   process.env.STORAGE_DIR = storageDirectory;
   process.env.MAX_FILE_SIZE_MB = '0.00001';
   const app = require('../src/app');
+  const fileRepository = require('../src/repositories/fileRepository');
   const server = app.listen(0);
   context.after(async () => {
     await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
     await fs.rm(storageDirectory, { recursive: true, force: true });
   });
   const baseUrl = `http://127.0.0.1:${server.address().port}`;
+
+  assert.throws(() => fileRepository.getPath('../outside'), /Nome de arquivo armazenado inválido/);
 
   const missing = await fetch(`${baseUrl}/upload`, { method: 'POST', body: new FormData() });
   assert.equal(missing.status, 400);
